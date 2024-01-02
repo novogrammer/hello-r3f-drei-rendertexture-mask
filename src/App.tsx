@@ -1,33 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Canvas, useFrame } from '@react-three/fiber'
 import './App.css'
+import { Loader, Mask, PerspectiveCamera, StatsGl } from '@react-three/drei'
+import { Suspense, useRef } from 'react';
+import { TunnelR3f } from './TunnelR3f';
+import { Section01 } from './Section01';
+import { Section02 } from './Section02';
+import * as THREE from "three";
+import { FOVY, SCENE01_LOOKAT_CURVEPATH, SCENE01_POSITION_CURVEPATH, SCENE02_ORIGIN } from './constants';
+
+function MaskScene(){
+  return <>
+    <Mask id={2} position={SCENE02_ORIGIN}>
+      <torusKnotGeometry/>
+      <meshBasicMaterial/>
+    </Mask>
+  </>;
+}
+
+
+function GlobalScene(){
+  const cameraGroupRef=useRef<THREE.Group>(null);
+  useFrame(()=>{
+    if(!cameraGroupRef.current){
+      return;
+    }
+    const cameraGroup=cameraGroupRef.current;
+
+    
+    const t=(performance.now()*0.001*0.1)%1;
+    const position=SCENE01_POSITION_CURVEPATH.getPoint(t);
+    cameraGroup.position.copy(position);
+    // const lookat=SCENE01_LOOKAT_CURVEPATH.getPoint(t);
+    // cameraGroup.lookAt(lookat);
+
+  })
+  return <>
+    <StatsGl/>
+    <group ref={cameraGroupRef}>
+      <PerspectiveCamera makeDefault fov={FOVY} position={[0,0,0]}/>
+      <Suspense fallback={null}>
+        <TunnelR3f.Out/>
+      </Suspense>
+    </group>
+    <MaskScene/>
+  </>;
+}
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const containerRef=useRef<HTMLDivElement>(null!);
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div style={{
+        position:"fixed",
+        left:0,
+        top:0,
+        width:"100%",
+        height:"100%",
+      }}>
+        <Canvas eventSource={containerRef} shadows={'soft'}>
+          <GlobalScene/>
+        </Canvas>
+        <Loader/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div ref={containerRef} style={{
+          position:"relative",
+      }}>
+        <Section01/>
+        <Section02/>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
     </>
   )
 }

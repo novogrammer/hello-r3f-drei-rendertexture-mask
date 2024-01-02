@@ -19,8 +19,13 @@ function MaskScene(){
 
 
 function GlobalScene(){
+  const dummyCameraRef=useRef<THREE.PerspectiveCamera>(null);
   const cameraGroupRef=useRef<THREE.Group>(null);
   useFrame(()=>{
+    if(!dummyCameraRef.current){
+      return;
+    }
+    const dummyCamera=dummyCameraRef.current;
     if(!cameraGroupRef.current){
       return;
     }
@@ -29,9 +34,11 @@ function GlobalScene(){
     
     const t=(performance.now()*0.001*0.1)%1;
     const position=SCENE01_POSITION_CURVEPATH.getPoint(t);
-    cameraGroup.position.copy(position);
-    // const lookat=SCENE01_LOOKAT_CURVEPATH.getPoint(t);
-    // cameraGroup.lookAt(lookat);
+    dummyCamera.position.copy(position);
+    const lookat=SCENE01_LOOKAT_CURVEPATH.getPoint(t);
+    dummyCamera.lookAt(lookat);
+    cameraGroup.matrixAutoUpdate=false;
+    cameraGroup.matrix.copy(dummyCamera.matrix);
 
   })
   return <>
@@ -42,6 +49,7 @@ function GlobalScene(){
         <TunnelR3f.Out/>
       </Suspense>
     </group>
+    <PerspectiveCamera ref={dummyCameraRef} fov={FOVY} position={[0,0,5]}/>
     <MaskScene/>
   </>;
 }

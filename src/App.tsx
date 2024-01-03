@@ -8,7 +8,7 @@ import { Section02 } from './Section02';
 import * as THREE from "three";
 import { FOVY, SCENE01_LOOKAT_CURVEPATH, SCENE01_POSITION_CURVEPATH, SCENE02_LOOKAT_CURVEPATH, SCENE02_ORIGIN, SCENE02_POSITION_CURVEPATH } from './constants';
 import { useScrollStore } from './useScrollStore';
-
+import { ReactLenis, useLenis } from '@studio-freight/react-lenis'
 function MaskScene(){
   return <>
     <Float rotationIntensity={10} position={SCENE02_ORIGIN}>
@@ -77,7 +77,9 @@ function GlobalScene(){
 function App() {
   const containerRef=useRef<HTMLDivElement>(null!);
   return (
-    <>
+    <ReactLenis root options={{
+      lerp:0.2,
+    }}>
       <div style={{
         position:"fixed",
         left:0,
@@ -103,7 +105,7 @@ function App() {
         </section>
       </div>
 
-    </>
+    </ReactLenis>
   )
 }
 

@@ -55,9 +55,9 @@ function Scene(){
 
 function Portal(){
   const stencil = useMask(2, false);
-  const section02Ratio=useScrollStore((state)=>state.section02Ratio);
+  const section01Ratio=useScrollStore((state)=>state.section01Ratio);
 
-  if(0<=section02Ratio){
+  if(1<=section01Ratio){
     stencil.stencilWrite=false;
   }
   const meshRef=useRef<THREE.Mesh>(null);

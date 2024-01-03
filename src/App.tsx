@@ -6,7 +6,7 @@ import { TunnelR3f } from './TunnelR3f';
 import { Section01 } from './Section01';
 import { Section02 } from './Section02';
 import * as THREE from "three";
-import { FOVY, SCENE01_LOOKAT_CURVEPATH, SCENE01_POSITION_CURVEPATH, SCENE02_ORIGIN } from './constants';
+import { FOVY, SCENE01_LOOKAT_CURVEPATH, SCENE01_POSITION_CURVEPATH, SCENE02_LOOKAT_CURVEPATH, SCENE02_ORIGIN, SCENE02_POSITION_CURVEPATH } from './constants';
 import { useScrollStore } from './useScrollStore';
 
 function MaskScene(){
@@ -26,6 +26,8 @@ function GlobalScene(){
   const dummyCameraRef=useRef<THREE.PerspectiveCamera>(null);
   const cameraGroupRef=useRef<THREE.Group>(null);
   const setCameraMatrix=useScrollStore((state)=>state.setCameraMatrix);
+  const section01Ratio=useScrollStore((state)=>state.section01Ratio);
+  const section02Ratio=useScrollStore((state)=>state.section02Ratio);
   useFrame(()=>{
     if(!dummyCameraRef.current){
       return;
@@ -36,11 +38,22 @@ function GlobalScene(){
     }
     const cameraGroup=cameraGroupRef.current;
 
-    
-    const t=(performance.now()*0.001*0.1)%1;
-    const position=SCENE01_POSITION_CURVEPATH.getPoint(t);
+
+    let positionCurvePath=null;
+    let lookatCurvePath=null;
+    let t=0;
+    if(section01Ratio<1){
+      positionCurvePath=SCENE01_POSITION_CURVEPATH;
+      lookatCurvePath=SCENE01_LOOKAT_CURVEPATH;
+      t=Math.min(1,Math.max(0,section01Ratio));
+    }else{
+      positionCurvePath=SCENE02_POSITION_CURVEPATH;
+      lookatCurvePath=SCENE02_LOOKAT_CURVEPATH;
+      t=Math.min(1,Math.max(0,section02Ratio));
+    }
+    const position=positionCurvePath.getPoint(t);
     dummyCamera.position.copy(position);
-    const lookat=SCENE01_LOOKAT_CURVEPATH.getPoint(t);
+    const lookat=lookatCurvePath.getPoint(t);
     dummyCamera.lookAt(lookat);
     cameraGroup.matrixAutoUpdate=false;
     cameraGroup.matrix.copy(dummyCamera.matrix);
@@ -82,6 +95,12 @@ function App() {
       }}>
         <Section01/>
         <Section02/>
+        <section style={{
+          height:"100vh",
+          padding:"1px",
+        }}>
+          <h2>Footer</h2>
+        </section>
       </div>
 
     </>

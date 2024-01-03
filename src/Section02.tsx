@@ -1,11 +1,12 @@
 import { Float, PerspectiveCamera, RenderTexture, useMask } from "@react-three/drei";
 import { TunnelR3f } from "./TunnelR3f";
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { FOVY, SCENE02_ORIGIN, SCENE02_PLANE_Z } from "./constants";
 import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
 import { useScrollStore } from "./useScrollStore";
+import { map } from "./math_utils";
 
 
 function Scene(){
@@ -55,7 +56,11 @@ function Scene(){
 
 function Portal(){
   const stencil = useMask(2, false);
-  // stencil.stencilWrite=false;
+  const section02Ratio=useScrollStore((state)=>state.section02Ratio);
+
+  if(0<=section02Ratio){
+    stencil.stencilWrite=false;
+  }
   const meshRef=useRef<THREE.Mesh>(null);
   useFrame((state)=>{
     if(!(state.camera instanceof THREE.PerspectiveCamera)){
@@ -85,13 +90,33 @@ function Portal(){
 
 
 export function Section02(){
+  const sectionRef=useRef<HTMLElement>(null);
+  const setSection02Ratio = useScrollStore((state)=>state.setSection02Ratio);
+  useLayoutEffect(()=>{
+    const update=()=>{
+      if(!sectionRef.current){
+        throw new Error("sectionRef.current is null");
+      }
+      const section=sectionRef.current;
+      const rect = section.getBoundingClientRect();
+      const ratio=map(0,rect.top,rect.bottom,0,1);
+      setSection02Ratio(ratio);
+    }
+    window.addEventListener("scroll",update);
+    window.addEventListener("resize",update);
+    return ()=>{
+      window.removeEventListener("scroll",update);
+      window.removeEventListener("resize",update);
+    }
+  },[setSection02Ratio])
 
   return <>
     <TunnelR3f.In>
       <Portal/>
     </TunnelR3f.In>
-    <section style={{
+    <section ref={sectionRef} style={{
       height:"200vh",
+      padding:"1px",
     }}>
       <h2>Section02</h2>
     </section>

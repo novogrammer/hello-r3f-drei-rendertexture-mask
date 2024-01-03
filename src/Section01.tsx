@@ -2,10 +2,11 @@ import { Float, PerspectiveCamera, RenderTexture } from "@react-three/drei";
 import { TunnelR3f } from "./TunnelR3f";
 import { useFrame } from "@react-three/fiber";
 import { FOVY, SCENE01_ORIGIN, SCENE01_PLANE_Z } from "./constants";
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
 import { useScrollStore } from "./useScrollStore";
+import { map } from "./math_utils";
 
 function Scene(){
   const cameraRef=useRef<THREE.PerspectiveCamera>(null);
@@ -84,12 +85,32 @@ function Portal(){
 
 
 export function Section01(){
+  const sectionRef=useRef<HTMLElement>(null);
+  const setSection01Ratio = useScrollStore((state)=>state.setSection01Ratio);
+  useLayoutEffect(()=>{
+    const update=()=>{
+      if(!sectionRef.current){
+        throw new Error("sectionRef.current is null");
+      }
+      const section=sectionRef.current;
+      const rect = section.getBoundingClientRect();
+      const ratio=map(0,rect.top,rect.bottom,0,1);
+      setSection01Ratio(ratio);
+    }
+    window.addEventListener("scroll",update);
+    window.addEventListener("resize",update);
+    return ()=>{
+      window.removeEventListener("scroll",update);
+      window.removeEventListener("resize",update);
+    }
+  },[setSection01Ratio])
   return <>
     <TunnelR3f.In>
       <Portal/>
     </TunnelR3f.In>
-    <section style={{
+    <section ref={sectionRef} style={{
       height:"200vh",
+      padding:"1px",
     }}>
       <h2>Section01</h2>
     </section>

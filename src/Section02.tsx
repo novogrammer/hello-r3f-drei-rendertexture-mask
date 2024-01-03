@@ -23,16 +23,28 @@ function Scene(){
   });
 
   return <>
-    <color attach="background" args={["purple"]}/>
+    <color attach="background" args={["orange"]}/>
     <ambientLight intensity={0.6} />
     <directionalLight intensity={1.0} position={[0, 3, 5]}/>
     <PerspectiveCamera ref={cameraRef} makeDefault fov={FOVY} />
     <group position={SCENE02_ORIGIN}>
 
-      <Float rotationIntensity={10}>
-        <mesh>
-          <sphereGeometry args={[1,32,16]} />
-          <meshStandardMaterial color="blue" />
+    <Float rotationIntensity={10}>
+        <mesh scale={0.5}>
+          <torusKnotGeometry />
+          <meshStandardMaterial color="magenta" />
+        </mesh>
+      </Float>
+      <Float rotationIntensity={10} position={[3,3,-5]}>
+        <mesh scale={0.5}>
+          <torusKnotGeometry />
+          <meshStandardMaterial color="magenta" />
+        </mesh>
+      </Float>
+      <Float rotationIntensity={10} position={[-3,-3,-5]}>
+        <mesh scale={0.5}>
+          <torusKnotGeometry />
+          <meshStandardMaterial color="magenta" />
         </mesh>
       </Float>
     </group>

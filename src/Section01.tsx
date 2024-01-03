@@ -5,16 +5,29 @@ import { FOVY, SCENE01_ORIGIN, SCENE01_PLANE_Z } from "./constants";
 import { useRef } from "react";
 import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
+import { useScrollStore } from "./useScrollStore";
 
 function Scene(){
+  const cameraRef=useRef<THREE.PerspectiveCamera>(null);
+  const cameraMatrix=useScrollStore((state)=>state.cameraMatrix);
+
+  useFrame(()=>{
+    if(!cameraRef.current){
+      return;
+    }
+    const camera=cameraRef.current;
+    camera.matrixAutoUpdate=false;
+    camera.matrix=cameraMatrix;
+
+  });
   
   return <>
     <color attach="background" args={["green"]}/>
     <ambientLight intensity={0.6} />
     <directionalLight intensity={1.0} position={[0, 3, 5]}/>
-    <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={FOVY} />
+    <PerspectiveCamera ref={cameraRef} makeDefault fov={FOVY} />
     <group position={SCENE01_ORIGIN}>
-      <Float rotationIntensity={10}>
+      <Float rotationIntensity={10} >
         <mesh>
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial color="orange" />

@@ -5,20 +5,34 @@ import { useFrame } from "@react-three/fiber";
 import { FOVY, SCENE02_ORIGIN, SCENE02_PLANE_Z } from "./constants";
 import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
+import { useScrollStore } from "./useScrollStore";
 
 
 function Scene(){
+  const cameraRef=useRef<THREE.PerspectiveCamera>(null);
+  const cameraMatrix=useScrollStore((state)=>state.cameraMatrix);
+
+  useFrame(()=>{
+    if(!cameraRef.current){
+      return;
+    }
+    const camera=cameraRef.current;
+    camera.matrixAutoUpdate=false;
+    camera.matrix=cameraMatrix;
+
+  });
+
   return <>
-    <color attach="background" args={["blue"]}/>
+    <color attach="background" args={["purple"]}/>
     <ambientLight intensity={0.6} />
     <directionalLight intensity={1.0} position={[0, 3, 5]}/>
-    <PerspectiveCamera makeDefault fov={FOVY} position={SCENE02_ORIGIN.clone().add(new THREE.Vector3(0,0,5))} />
+    <PerspectiveCamera ref={cameraRef} makeDefault fov={FOVY} />
     <group position={SCENE02_ORIGIN}>
 
       <Float rotationIntensity={10}>
         <mesh>
           <sphereGeometry args={[1,32,16]} />
-          <meshStandardMaterial color="green" />
+          <meshStandardMaterial color="blue" />
         </mesh>
       </Float>
     </group>
@@ -29,6 +43,7 @@ function Scene(){
 
 function Portal(){
   const stencil = useMask(2, false);
+  // stencil.stencilWrite=false;
   const meshRef=useRef<THREE.Mesh>(null);
   useFrame((state)=>{
     if(!(state.camera instanceof THREE.PerspectiveCamera)){

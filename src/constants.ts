@@ -3,13 +3,13 @@ import * as THREE from "three";
 export const FOVY=30;
 
 export const SCENE01_ORIGIN=new THREE.Vector3(0,0,0);
-export const SCENE02_ORIGIN=new THREE.Vector3(0,-2,-2);
+export const SCENE02_ORIGIN=new THREE.Vector3(0,-10,-10);
 
 export const SCENE01_PLANE_Z=-5;
 export const SCENE02_PLANE_Z=-4;
 
 export const SCENE01_CAMERA_LOOKAT01=SCENE01_ORIGIN.clone();
-export const SCENE01_CAMERA_LOOKAT02=SCENE01_ORIGIN.clone().add(new THREE.Vector3(0,-2,0));
+export const SCENE01_CAMERA_LOOKAT02=SCENE01_ORIGIN.clone().add(new THREE.Vector3(0,-10,0));
 export const SCENE01_CAMERA_LOOKAT03=SCENE02_ORIGIN.clone();
 
 const z5=new THREE.Vector3(0,0,5);

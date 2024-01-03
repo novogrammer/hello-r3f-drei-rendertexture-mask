@@ -1,17 +1,26 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import './App.css'
-import { Loader, Mask, PerspectiveCamera, StatsGl } from '@react-three/drei'
+import { Float, Loader, Mask, PerspectiveCamera, StatsGl } from '@react-three/drei'
 import { Suspense, useRef } from 'react';
 import { TunnelR3f } from './TunnelR3f';
 import { Section01 } from './Section01';
 import { Section02 } from './Section02';
 import * as THREE from "three";
 import { FOVY, SCENE01_LOOKAT_CURVEPATH, SCENE01_POSITION_CURVEPATH, SCENE02_ORIGIN } from './constants';
+import { useScrollStore } from './useScrollStore';
 
 function MaskScene(){
+  const maskRef=useRef<THREE.Mesh>(null);
+  useFrame((_state,delta)=>{
+    if(!maskRef.current){
+      return;
+    }
+    const mask=maskRef.current;
+    mask.rotateY(delta);
+  });
   return <>
-    <Mask id={2} position={SCENE02_ORIGIN}>
-      <torusKnotGeometry/>
+    <Mask ref={maskRef} id={2} position={SCENE02_ORIGIN}>
+      <boxGeometry args={[4,4,4]}/>
       <meshBasicMaterial/>
     </Mask>
   </>;
@@ -21,6 +30,7 @@ function MaskScene(){
 function GlobalScene(){
   const dummyCameraRef=useRef<THREE.PerspectiveCamera>(null);
   const cameraGroupRef=useRef<THREE.Group>(null);
+  const setCameraMatrix=useScrollStore((state)=>state.setCameraMatrix);
   useFrame(()=>{
     if(!dummyCameraRef.current){
       return;
@@ -39,6 +49,7 @@ function GlobalScene(){
     dummyCamera.lookAt(lookat);
     cameraGroup.matrixAutoUpdate=false;
     cameraGroup.matrix.copy(dummyCamera.matrix);
+    setCameraMatrix(dummyCamera.matrix.clone());
 
   })
   return <>

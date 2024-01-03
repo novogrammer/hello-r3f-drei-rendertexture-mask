@@ -2,7 +2,7 @@ import { Float, PerspectiveCamera, RenderTexture } from "@react-three/drei";
 import { TunnelR3f } from "./TunnelR3f";
 import { useFrame } from "@react-three/fiber";
 import { FOVY, SCENE01_ORIGIN, SCENE01_PLANE_Z } from "./constants";
-import { useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
 import { useScrollStore } from "./useScrollStore";
@@ -12,15 +12,14 @@ function Scene(){
   const cameraRef=useRef<THREE.PerspectiveCamera>(null);
   const cameraMatrix=useScrollStore((state)=>state.cameraMatrix);
 
-  useFrame(()=>{
+  useEffect(()=>{
     if(!cameraRef.current){
       return;
     }
     const camera=cameraRef.current;
     camera.matrixAutoUpdate=false;
     camera.matrix=cameraMatrix;
-
-  });
+  },[cameraMatrix]);
   
   return <>
     <color attach="background" args={["green"]}/>
@@ -87,23 +86,23 @@ function Portal(){
 export function Section01(){
   const sectionRef=useRef<HTMLElement>(null);
   const setSection01Ratio = useScrollStore((state)=>state.setSection01Ratio);
-  useLayoutEffect(()=>{
-    const update=()=>{
-      if(!sectionRef.current){
-        throw new Error("sectionRef.current is null");
-      }
-      const section=sectionRef.current;
-      const rect = section.getBoundingClientRect();
-      const ratio=map(0,rect.top,rect.bottom,0,1);
-      setSection01Ratio(ratio);
+  const update=useCallback(()=>{
+    if(!sectionRef.current){
+      throw new Error("sectionRef.current is null");
     }
+    const section=sectionRef.current;
+    const rect = section.getBoundingClientRect();
+    const ratio=map(0,rect.top,rect.bottom,0,1);
+    setSection01Ratio(ratio);
+  },[setSection01Ratio])
+  useLayoutEffect(()=>{
     window.addEventListener("scroll",update);
     window.addEventListener("resize",update);
     return ()=>{
       window.removeEventListener("scroll",update);
       window.removeEventListener("resize",update);
     }
-  },[setSection01Ratio])
+  },[update])
   return <>
     <TunnelR3f.In>
       <Portal/>

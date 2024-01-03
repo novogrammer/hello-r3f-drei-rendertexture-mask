@@ -1,6 +1,6 @@
 import { Float, PerspectiveCamera, RenderTexture, useMask } from "@react-three/drei";
 import { TunnelR3f } from "./TunnelR3f";
-import { useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { FOVY, SCENE02_ORIGIN, SCENE02_PLANE_Z } from "./constants";
 import * as THREE from "three";
@@ -13,15 +13,14 @@ function Scene(){
   const cameraRef=useRef<THREE.PerspectiveCamera>(null);
   const cameraMatrix=useScrollStore((state)=>state.cameraMatrix);
 
-  useFrame(()=>{
+  useEffect(()=>{
     if(!cameraRef.current){
       return;
     }
     const camera=cameraRef.current;
     camera.matrixAutoUpdate=false;
     camera.matrix=cameraMatrix;
-
-  });
+  },[cameraMatrix]);
 
   return <>
     <color attach="background" args={["orange"]}/>
@@ -92,23 +91,23 @@ function Portal(){
 export function Section02(){
   const sectionRef=useRef<HTMLElement>(null);
   const setSection02Ratio = useScrollStore((state)=>state.setSection02Ratio);
-  useLayoutEffect(()=>{
-    const update=()=>{
-      if(!sectionRef.current){
-        throw new Error("sectionRef.current is null");
-      }
-      const section=sectionRef.current;
-      const rect = section.getBoundingClientRect();
-      const ratio=map(0,rect.top,rect.bottom,0,1);
-      setSection02Ratio(ratio);
+  const update=useCallback(()=>{
+    if(!sectionRef.current){
+      throw new Error("sectionRef.current is null");
     }
+    const section=sectionRef.current;
+    const rect = section.getBoundingClientRect();
+    const ratio=map(0,rect.top,rect.bottom,0,1);
+    setSection02Ratio(ratio);
+  },[setSection02Ratio]);
+  useLayoutEffect(()=>{
     window.addEventListener("scroll",update);
     window.addEventListener("resize",update);
     return ()=>{
       window.removeEventListener("scroll",update);
       window.removeEventListener("resize",update);
     }
-  },[setSection02Ratio])
+  },[update])
 
   return <>
     <TunnelR3f.In>

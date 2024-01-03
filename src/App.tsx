@@ -10,19 +10,14 @@ import { FOVY, SCENE01_LOOKAT_CURVEPATH, SCENE01_POSITION_CURVEPATH, SCENE02_ORI
 import { useScrollStore } from './useScrollStore';
 
 function MaskScene(){
-  const maskRef=useRef<THREE.Mesh>(null);
-  useFrame((_state,delta)=>{
-    if(!maskRef.current){
-      return;
-    }
-    const mask=maskRef.current;
-    mask.rotateY(delta);
-  });
   return <>
-    <Mask ref={maskRef} id={2} position={SCENE02_ORIGIN}>
-      <boxGeometry args={[4,4,4]}/>
-      <meshBasicMaterial/>
-    </Mask>
+    <Float rotationIntensity={10} position={SCENE02_ORIGIN}>
+      <Mask id={2}>
+        <boxGeometry args={[4,4,4]}/>
+        <meshBasicMaterial/>
+      </Mask>
+
+    </Float>
   </>;
 }
 

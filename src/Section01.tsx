@@ -33,6 +33,18 @@ function Scene(){
           <meshStandardMaterial color="orange" />
         </mesh>
       </Float>
+      <Float rotationIntensity={10}  position={[-1,-3,-5]} >
+        <mesh>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="orange" />
+        </mesh>
+      </Float>
+      <Float rotationIntensity={10}  position={[1,-6,-5]} >
+        <mesh>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="orange" />
+        </mesh>
+      </Float>
     </group>
   </>;
 

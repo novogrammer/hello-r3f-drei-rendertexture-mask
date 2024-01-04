@@ -6,7 +6,6 @@ import { FOVY, SCENE02_ORIGIN, SCENE02_PLANE_Z } from "./constants";
 import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
 import { useScrollStore } from "./useScrollStore";
-import { map } from "./math_utils";
 
 
 function Scene(){
@@ -55,11 +54,9 @@ function Scene(){
 
 function Portal(){
   const stencil = useMask(2, false);
-  const section01Ratio=useScrollStore((state)=>state.section01Ratio);
-
-  if(1<=section01Ratio){
-    stencil.stencilWrite=false;
-  }
+  const section01Height=useScrollStore((state)=>state.section01Height);
+  stencil.stencilWrite=window.scrollY<section01Height;
+  
   const meshRef=useRef<THREE.Mesh>(null);
   useFrame((state)=>{
     if(!(state.camera instanceof THREE.PerspectiveCamera)){
@@ -90,21 +87,21 @@ function Portal(){
 
 export function Section02(){
   const sectionRef=useRef<HTMLElement>(null);
-  const setSection02Ratio = useScrollStore((state)=>state.setSection02Ratio);
+  const setSection02Height = useScrollStore((state)=>state.setSection02Height);
   const update=useCallback(()=>{
     if(!sectionRef.current){
       throw new Error("sectionRef.current is null");
     }
     const section=sectionRef.current;
     const rect = section.getBoundingClientRect();
-    const ratio=map(0,rect.top,rect.bottom,0,1);
-    setSection02Ratio(ratio);
-  },[setSection02Ratio]);
+    setSection02Height(rect.height);
+  },[setSection02Height]);
   useLayoutEffect(()=>{
-    window.addEventListener("scroll",update);
+    // window.addEventListener("scroll",update);
     window.addEventListener("resize",update);
+    update();
     return ()=>{
-      window.removeEventListener("scroll",update);
+      // window.removeEventListener("scroll",update);
       window.removeEventListener("resize",update);
     }
   },[update])

@@ -6,7 +6,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
 import { useScrollStore } from "./useScrollStore";
-import { map } from "./math_utils";
 
 function Scene(){
   const cameraRef=useRef<THREE.PerspectiveCamera>(null);
@@ -85,21 +84,21 @@ function Portal(){
 
 export function Section01(){
   const sectionRef=useRef<HTMLElement>(null);
-  const setSection01Ratio = useScrollStore((state)=>state.setSection01Ratio);
+  const setSection01Height = useScrollStore((state)=>state.setSection01Height);
   const update=useCallback(()=>{
     if(!sectionRef.current){
       throw new Error("sectionRef.current is null");
     }
     const section=sectionRef.current;
     const rect = section.getBoundingClientRect();
-    const ratio=map(0,rect.top,rect.bottom,0,1);
-    setSection01Ratio(ratio);
-  },[setSection01Ratio])
+    setSection01Height(rect.height);
+  },[setSection01Height])
   useLayoutEffect(()=>{
-    window.addEventListener("scroll",update);
+    // window.addEventListener("scroll",update);
     window.addEventListener("resize",update);
+    update();
     return ()=>{
-      window.removeEventListener("scroll",update);
+      // window.removeEventListener("scroll",update);
       window.removeEventListener("resize",update);
     }
   },[update])

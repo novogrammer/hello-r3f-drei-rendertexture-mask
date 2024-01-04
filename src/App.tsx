@@ -9,6 +9,7 @@ import * as THREE from "three";
 import { FOVY, SCENE01_LOOKAT_CURVEPATH, SCENE01_POSITION_CURVEPATH, SCENE02_LOOKAT_CURVEPATH, SCENE02_ORIGIN, SCENE02_POSITION_CURVEPATH } from './constants';
 import { useScrollStore } from './useScrollStore';
 import { ReactLenis } from '@studio-freight/react-lenis'
+import { map } from './math_utils';
 function MaskScene(){
   return <>
     <Float rotationIntensity={10} position={SCENE02_ORIGIN}>
@@ -26,8 +27,9 @@ function GlobalScene(){
   const dummyCameraRef=useRef<THREE.PerspectiveCamera>(null);
   const cameraGroupRef=useRef<THREE.Group>(null);
   const setCameraMatrix=useScrollStore((state)=>state.setCameraMatrix);
-  const section01Ratio=useScrollStore((state)=>state.section01Ratio);
-  const section02Ratio=useScrollStore((state)=>state.section02Ratio);
+  const section01Height=useScrollStore((state)=>state.section01Height);
+  const section02Height=useScrollStore((state)=>state.section02Height);
+
   useFrame(()=>{
     if(!dummyCameraRef.current){
       return;
@@ -42,14 +44,15 @@ function GlobalScene(){
     let positionCurvePath=null;
     let lookatCurvePath=null;
     let t=0;
-    if(section01Ratio<1){
+    
+    if(window.scrollY<section01Height){
       positionCurvePath=SCENE01_POSITION_CURVEPATH;
       lookatCurvePath=SCENE01_LOOKAT_CURVEPATH;
-      t=Math.min(1,Math.max(0,section01Ratio));
+      t=map(window.scrollY,0,section01Height,0,1,true);
     }else{
       positionCurvePath=SCENE02_POSITION_CURVEPATH;
       lookatCurvePath=SCENE02_LOOKAT_CURVEPATH;
-      t=Math.min(1,Math.max(0,section02Ratio));
+      t=map(window.scrollY,section01Height,section01Height+section02Height,0,1,true);
     }
     const position=positionCurvePath.getPoint(t);
     dummyCamera.position.copy(position);
@@ -60,6 +63,7 @@ function GlobalScene(){
     setCameraMatrix(dummyCamera.matrix.clone());
 
   })
+
   return <>
     <StatsGl/>
     <group ref={cameraGroupRef}>

@@ -107,7 +107,7 @@ export function Section01(){
       <Portal/>
     </TunnelR3f.In>
     <section ref={sectionRef} style={{
-      height:"200vh",
+      height:"200svh",
       padding:"1px",
     }}>
       <h2>Section01</h2>

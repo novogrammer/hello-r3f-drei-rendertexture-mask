@@ -1,6 +1,6 @@
 import { Float, PerspectiveCamera, RenderTexture, useMask } from "@react-three/drei";
 import { TunnelR3f } from "./TunnelR3f";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { FOVY, SCENE02_ORIGIN, SCENE02_PLANE_Z } from "./constants";
 import * as THREE from "three";
@@ -55,10 +55,13 @@ function Scene(){
 function Portal(){
   const stencil = useMask(2, false);
   const section01Height=useScrollStore((state)=>state.section01Height);
-  stencil.stencilWrite=window.scrollY<section01Height;
+  const [isMaskEnabled,setIsMaskEnabled]=useState(false);
+  stencil.stencilWrite=isMaskEnabled;
   
   const meshRef=useRef<THREE.Mesh>(null);
   useFrame((state)=>{
+    setIsMaskEnabled(window.scrollY<section01Height);
+
     if(!(state.camera instanceof THREE.PerspectiveCamera)){
       throw new Error("camera is not PerspectiveCamera");
     }

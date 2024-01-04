@@ -6,25 +6,32 @@ import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
 import { useScrollStore } from "./useScrollStore";
+import { globalEventEmitter } from "./globalEventEmitter";
 
 function Scene(){
   const cameraRef=useRef<THREE.PerspectiveCamera>(null);
-  const cameraMatrix=useScrollStore((state)=>state.cameraMatrix);
 
   useEffect(()=>{
-    if(!cameraRef.current){
-      return;
+    const onUpdateCamera=({matrix}:{matrix:THREE.Matrix4})=>{
+      if(!cameraRef.current){
+        return;
+      }
+      const camera=cameraRef.current;
+      camera.matrixAutoUpdate=false;
+      camera.matrix=matrix;
+  
+    };
+    globalEventEmitter.on("updateCamera",onUpdateCamera);
+    return()=>{
+      globalEventEmitter.off("updateCamera",onUpdateCamera);
     }
-    const camera=cameraRef.current;
-    camera.matrixAutoUpdate=false;
-    camera.matrix=cameraMatrix;
-  },[cameraMatrix]);
+  },[]);
   
   return <>
     <color attach="background" args={["green"]}/>
     <ambientLight intensity={0.6} />
     <directionalLight intensity={1.0} position={[0, 3, 5]}/>
-    <PerspectiveCamera ref={cameraRef} makeDefault fov={FOVY} />
+    <PerspectiveCamera ref={cameraRef} name="SceneCamera01" makeDefault fov={FOVY} />
     <group position={SCENE01_ORIGIN}>
       <Float rotationIntensity={10} >
         <mesh>

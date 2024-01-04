@@ -10,6 +10,7 @@ import { FOVY, SCENE01_LOOKAT_CURVEPATH, SCENE01_POSITION_CURVEPATH, SCENE02_LOO
 import { useScrollStore } from './useScrollStore';
 import { ReactLenis } from '@studio-freight/react-lenis'
 import { map } from './math_utils';
+import { globalEventEmitter } from './globalEventEmitter';
 function MaskScene(){
   return <>
     <Float rotationIntensity={10} position={SCENE02_ORIGIN}>
@@ -26,11 +27,10 @@ function MaskScene(){
 function GlobalScene(){
   const dummyCameraRef=useRef<THREE.PerspectiveCamera>(null);
   const cameraGroupRef=useRef<THREE.Group>(null);
-  const setCameraMatrix=useScrollStore((state)=>state.setCameraMatrix);
   const section01Height=useScrollStore((state)=>state.section01Height);
   const section02Height=useScrollStore((state)=>state.section02Height);
 
-  useFrame(()=>{
+  useFrame((state)=>{
     if(!dummyCameraRef.current){
       return;
     }
@@ -60,7 +60,12 @@ function GlobalScene(){
     dummyCamera.lookAt(lookat);
     cameraGroup.matrixAutoUpdate=false;
     cameraGroup.matrix.copy(dummyCamera.matrix);
-    setCameraMatrix(dummyCamera.matrix.clone());
+
+    globalEventEmitter.emit("updateCamera",{matrix:dummyCamera.matrix.clone()})
+
+    const sceneCamera=state.scene.getObjectByName("SceneCamera01");
+
+    console.log(!!sceneCamera);
 
   })
 

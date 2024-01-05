@@ -36,19 +36,19 @@ function Scene(){
       <Float rotationIntensity={10} >
         <mesh>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="orange" />
+          <meshStandardMaterial color="orange" roughness={0.1} metalness={0.2} />
         </mesh>
       </Float>
       <Float rotationIntensity={10}  position={[-1,-3,-5]} >
         <mesh>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="orange" />
+          <meshStandardMaterial color="orange"  roughness={0.1} metalness={0.2} />
         </mesh>
       </Float>
       <Float rotationIntensity={10}  position={[1,-6,-5]} >
         <mesh>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="orange" />
+          <meshStandardMaterial color="orange"  roughness={0.1} metalness={0.2} />
         </mesh>
       </Float>
       <group>

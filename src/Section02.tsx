@@ -37,19 +37,19 @@ function Scene(){
       <Float rotationIntensity={10}>
         <mesh scale={0.5}>
           <torusKnotGeometry />
-          <meshStandardMaterial color="magenta" />
+          <meshStandardMaterial color="magenta" roughness={0.1} metalness={0.2} />
         </mesh>
       </Float>
       <Float rotationIntensity={10} position={[3,3,-5]}>
         <mesh scale={0.5}>
           <torusKnotGeometry />
-          <meshStandardMaterial color="magenta" />
+          <meshStandardMaterial color="magenta" roughness={0.1} metalness={0.2} />
         </mesh>
       </Float>
       <Float rotationIntensity={10} position={[-3,-3,-5]}>
         <mesh scale={0.5}>
           <torusKnotGeometry />
-          <meshStandardMaterial color="magenta" />
+          <meshStandardMaterial color="magenta" roughness={0.1} metalness={0.2} />
         </mesh>
       </Float>
     </group>

@@ -63,9 +63,6 @@ function GlobalScene(){
 
     globalEventEmitter.emit("updateCamera",{matrix:dummyCamera.matrix.clone()})
 
-    const sceneCamera=state.scene.getObjectByName("SceneCamera01");
-
-    console.log(!!sceneCamera);
 
   })
 

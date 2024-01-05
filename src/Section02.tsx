@@ -1,4 +1,4 @@
-import { Float, PerspectiveCamera, RenderTexture, useMask } from "@react-three/drei";
+import { Environment, Float, PerspectiveCamera, RenderTexture, useMask } from "@react-three/drei";
 import { TunnelR3f } from "./TunnelR3f";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -34,7 +34,7 @@ function Scene(){
     <PerspectiveCamera ref={cameraRef} makeDefault fov={FOVY} />
     <group position={SCENE02_ORIGIN}>
 
-    <Float rotationIntensity={10}>
+      <Float rotationIntensity={10}>
         <mesh scale={0.5}>
           <torusKnotGeometry />
           <meshStandardMaterial color="magenta" />
@@ -52,6 +52,12 @@ function Scene(){
           <meshStandardMaterial color="magenta" />
         </mesh>
       </Float>
+    </group>
+    <group>
+      <Environment
+        preset="city"
+        background
+      />
     </group>
   </>;
 

@@ -1,4 +1,4 @@
-import { Float, PerspectiveCamera, RenderTexture } from "@react-three/drei";
+import { Environment, Float, PerspectiveCamera, RenderTexture } from "@react-three/drei";
 import { TunnelR3f } from "./TunnelR3f";
 import { useFrame } from "@react-three/fiber";
 import { FOVY, SCENE01_ORIGIN, SCENE01_PLANE_Z } from "./constants";
@@ -51,6 +51,12 @@ function Scene(){
           <meshStandardMaterial color="orange" />
         </mesh>
       </Float>
+      <group>
+        <Environment
+          preset="dawn"
+          background
+        />
+      </group>
     </group>
   </>;
 

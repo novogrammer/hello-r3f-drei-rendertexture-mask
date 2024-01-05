@@ -30,7 +30,7 @@ function GlobalScene(){
   const section01Height=useScrollStore((state)=>state.section01Height);
   const section02Height=useScrollStore((state)=>state.section02Height);
 
-  useFrame((state)=>{
+  useFrame(()=>{
     if(!dummyCameraRef.current){
       return;
     }

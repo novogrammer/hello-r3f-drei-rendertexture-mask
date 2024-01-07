@@ -28,7 +28,7 @@ function Scene(){
   },[]);
   
   return <>
-    <color attach="background" args={["green"]}/>
+    <color attach="background" args={["cyan"]}/>
     <ambientLight intensity={0.6} />
     <directionalLight intensity={1.0} position={[0, 3, 5]}/>
     <PerspectiveCamera ref={cameraRef} name="SceneCamera01" makeDefault fov={FOVY} />
@@ -54,7 +54,7 @@ function Scene(){
       <group>
         <Environment
           preset="dawn"
-          background
+          background={false}
         />
       </group>
     </group>

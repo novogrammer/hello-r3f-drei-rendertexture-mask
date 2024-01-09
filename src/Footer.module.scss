@@ -1,0 +1,36 @@
+.Footer{
+  position:relative;
+  height:100vh;
+  padding:1px;
+  &__title{
+    font-size:10vw;
+    line-height:1em;
+    margin:0;
+    margin-bottom:2em;
+    color:#fff;
+    mix-blend-mode: difference;
+  }
+  &__text{
+    font-size:5vw;
+    line-height:1.5em;
+    margin:0;
+    color:#fff;
+    mix-blend-mode: difference;
+
+  }
+  &__copyright{
+    position:absolute;
+    left:0;
+    bottom:5vh;
+    width:100%;
+    font-size:5vw;
+    line-height:1.5em;
+    margin:0;
+    text-align: center;
+    color:#fff;
+    mix-blend-mode: difference;
+
+
+  }
+
+}

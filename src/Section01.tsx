@@ -7,6 +7,8 @@ import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
 import { useScrollStore } from "./useScrollStore";
 import { globalEventEmitter } from "./globalEventEmitter";
+import styles from "./Section01.module.scss";
+
 
 function Scene(){
   const cameraRef=useRef<THREE.PerspectiveCamera>(null);
@@ -119,11 +121,9 @@ export function Section01(){
     <TunnelR3f.In>
       <Portal/>
     </TunnelR3f.In>
-    <section ref={sectionRef} style={{
-      height:"200svh",
-      padding:"1px",
-    }}>
-      <h2>Section01</h2>
+    <section ref={sectionRef} className={styles["Section01"]}>
+      <h2 className={styles["Section01__title"]}>Section01</h2>
+      <p className={styles["Section01__text"]}>The quick brown fox jumps over the lazy dog.</p>
     </section>
   </>;
 }

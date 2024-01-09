@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { calcHeightFactorFromFovy } from "./three_utils";
 import { useScrollStore } from "./useScrollStore";
 import { globalEventEmitter } from "./globalEventEmitter";
+import styles from "./Section02.module.scss";
 
 
 function Scene(){
@@ -125,11 +126,9 @@ export function Section02(){
     <TunnelR3f.In>
       <Portal/>
     </TunnelR3f.In>
-    <section ref={sectionRef} style={{
-      height:"200svh",
-      padding:"1px",
-    }}>
-      <h2>Section02</h2>
+    <section ref={sectionRef} className={styles["Section02"]}>
+      <h2 className={styles["Section02__title"]}>Section02</h2>
+      <p className={styles["Section02__text"]}>The quick brown fox jumps over the lazy dog.</p>
     </section>
   </>;
 }

@@ -11,6 +11,7 @@ import { useScrollStore } from './useScrollStore';
 import { ReactLenis } from '@studio-freight/react-lenis'
 import { map } from './math_utils';
 import { globalEventEmitter } from './globalEventEmitter';
+import { Footer } from './Footer';
 function MaskScene(){
   return <>
     <Float rotationIntensity={10} position={SCENE02_ORIGIN}>
@@ -103,12 +104,7 @@ function App() {
       }}>
         <Section01/>
         <Section02/>
-        <section style={{
-          height:"100vh",
-          padding:"1px",
-        }}>
-          <h2>Footer</h2>
-        </section>
+        <Footer/>
       </div>
 
     </ReactLenis>

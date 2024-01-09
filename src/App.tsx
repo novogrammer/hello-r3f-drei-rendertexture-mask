@@ -12,6 +12,7 @@ import { ReactLenis } from '@studio-freight/react-lenis'
 import { map } from './math_utils';
 import { globalEventEmitter } from './globalEventEmitter';
 import { Footer } from './Footer';
+import { EffectComposer, Noise, Vignette } from '@react-three/postprocessing';
 function MaskScene(){
   return <>
     <Float rotationIntensity={10} position={SCENE02_ORIGIN}>
@@ -77,6 +78,10 @@ function GlobalScene(){
     </group>
     <PerspectiveCamera ref={dummyCameraRef} fov={FOVY} position={[0,0,5]}/>
     <MaskScene/>
+    <EffectComposer stencilBuffer>
+      <Noise opacity={0.5} />
+      <Vignette eskil={false} offset={0.1} darkness={1.1} />
+    </EffectComposer>
   </>;
 }
 
